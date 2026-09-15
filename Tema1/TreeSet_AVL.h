@@ -34,8 +34,9 @@ protected:
       T elem;
       Link iz, dr;
       int altura;
+      int tam_i;
       TreeNode(T const& e, Link i = nullptr, Link d = nullptr,
-               int alt = 1) : elem(e), iz(i), dr(d), altura(alt) {}
+               int alt = 1, int tam = 0) : elem(e), iz(i), dr(d), altura(alt), tam_i(tam) {}
    };
 
    // puntero a la raíz de la estructura jerárquica de nodos
@@ -88,6 +89,15 @@ public:
 
    bool erase(T const& e) {
       return borra(e, raiz);
+   }
+
+   T const& kesimo(int k) const
+   {
+      if (k > nelems) {
+         throw invalid_argument("Element in position " + k + " doesn't exist.");
+      }
+
+
    }
 
 protected:
@@ -191,7 +201,10 @@ protected:
             rotaIzqDer(a);
          else rotaDer(a);
       }
-      else a->altura = std::max(altura(a->iz), altura(a->dr)) + 1;
+      else {
+         a->altura = std::max(altura(a->iz), altura(a->dr)) + 1;
+         a->tam_i++; // se ha insertado por la izquierda, y no necesita equilibrado. hay uno mas en la izquierda de todos ? to check on paper.
+      }
    }
 
    // devuelve y borra el mínimo del árbol con raíz en a
