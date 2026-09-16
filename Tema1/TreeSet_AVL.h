@@ -36,7 +36,7 @@ protected:
       int altura;
       int tam_i;
       TreeNode(T const& e, Link i = nullptr, Link d = nullptr,
-               int alt = 1, int tam = 0) : elem(e), iz(i), dr(d), altura(alt), tam_i(tam) {}
+               int alt = 1, int tam = 1) : elem(e), iz(i), dr(d), altura(alt), tam_i(tam) {}
    };
 
    // puntero a la raíz de la estructura jerárquica de nodos
@@ -93,11 +93,11 @@ public:
 
    T const& kesimo(int k) const
    {
-      if (k > nelems) {
-         throw invalid_argument("Element in position " + k + " doesn't exist.");
+      if (k > nelems || k < 1) {
+         throw invalid_argument("Element in requested position doesn't exist.");
       }
 
-
+      return kesimo(raiz, k);
    }
 
 protected:
@@ -110,7 +110,7 @@ protected:
 
    static Link copia(Link a) {
       if (a == nullptr) return nullptr;
-      else return new TreeNode(a->elem, copia(a->iz), copia(a->dr), a->altura);
+      else return new TreeNode(a->elem, copia(a->iz), copia(a->dr), a->altura, a->tam_i);
    }
 
    static void libera(Link a) {
@@ -144,7 +144,10 @@ protected:
          crece = true;
       } else if (menor(e, a->elem)) {
          crece = inserta(e, a->iz);
-         if (crece) reequilibraDer(a);
+         if (crece) {
+            a->tam_i++;
+            reequilibraDer(a);
+         }
       } else if (menor(a->elem, e)) {
          crece = inserta(e, a->dr);
          if (crece) reequilibraIzq(a);
@@ -160,19 +163,35 @@ protected:
 
    void rotaDer(Link & r2) {
       Link r1 = r2->iz;
+
+      int tam_r2 = r2->tam_i;
+      int tam_r1 = r1->tam_i; 
+
       r2->iz = r1->dr;
       r1->dr = r2;
       r2->altura = std::max(altura(r2->iz), altura(r2->dr)) + 1;
       r1->altura = std::max(altura(r1->iz), altura(r1->dr)) + 1;
+
+      r2->tam_i = tam_r2 - tam_r1;
+      // r1->tam_i se queda igual;
+      
       r2 = r1;
    }
 
    void rotaIzq(Link & r1) {
       Link r2 = r1->dr;
+
+      int tam_r1 = r1->tam_i;
+      int tam_r2 = r2->tam_i;
+
       r1->dr = r2->iz;
       r2->iz = r1;
       r1->altura = std::max(altura(r1->iz), altura(r1->dr)) + 1;
       r2->altura = std::max(altura(r2->iz), altura(r2->dr)) + 1;
+      
+      // r1->tam_i se queda igual;
+      r2->tam_i = tam_r1 + tam_r2;
+
       r1 = r2;
    }
 
@@ -203,7 +222,6 @@ protected:
       }
       else {
          a->altura = std::max(altura(a->iz), altura(a->dr)) + 1;
-         a->tam_i++; // se ha insertado por la izquierda, y no necesita equilibrado. hay uno mas en la izquierda de todos ? to check on paper.
       }
    }
 
@@ -248,6 +266,16 @@ protected:
          }
       }
       return decrece;
+   }
+
+   T const& kesimo(const Link& a, int k) const {
+      if (a->tam_i == k) {
+         return a->elem;
+      }
+      else if (k < a->tam_i) {
+         return kesimo(a->iz, k);
+      }
+      return kesimo(a->dr, k - a->tam_i);
    }
 
 public:
