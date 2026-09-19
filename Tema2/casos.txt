@@ -1,11 +1,18 @@
-2 2
-10 5
-2 2
-5 10
-3 2
-5 10
-4 5
-5 5 3 3 3
-2 4
-1 1 1 100
-0 0
+4
+I Luis 1000
+I Eva 2000
+A
+A
+9
+I Alberto 4000
+I Pepe 3000
+A
+I Rosa 2000
+I Laura 5000
+A
+I Sara 3000
+A
+A
+1
+I Ana 0
+0
