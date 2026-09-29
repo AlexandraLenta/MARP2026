@@ -6,6 +6,8 @@
 
 #include <iostream>
 #include <fstream>
+#include <queue>
+#include <vector>
 
 using namespace std;
 
@@ -25,15 +27,70 @@ using namespace std;
 
 bool resuelveCaso() {
 
-   int n;
-   cin >> n;
+   int n, a, b;
+   cin >> n >> a >> b;
 
    if (!std::cin)  // fin de la entrada
       return false;
 
-   // resolver el caso posiblemente llamando a otras funciones
+   priority_queue<int> pilasA, pilasB; // almacena el nr de horas de cada pila
 
-   // escribir la solución
+   int h;
+   for (int i = 0; i < a; i++) {
+      cin >> h;
+      pilasA.push(h);
+   }
+   for (int i = 0; i < b; i++) {
+      cin >> h;
+      pilasB.push(h);
+   }
+
+   int aP, bP;
+
+   int total = 0;
+   vector<int> usadasA;
+   vector<int> usadasB;
+
+   while (!pilasA.empty() && !pilasB.empty()) {
+      total = 0;
+
+      for (int i = 0; i < n; i++) {
+         aP = pilasA.top();
+         bP = pilasB.top();
+
+         pilasA.pop();
+         pilasB.pop();
+
+         int max = std::min(aP, bP);
+         total += max;
+
+         if (aP > bP) {
+            // pilasA.push(aP - bP);
+            usadasA.push_back(aP - bP);
+         }
+         else if (bP > aP) {
+            // pilasB.push(bP - aP);
+            usadasB.push_back(bP - aP);
+         }
+
+         if (pilasA.empty() || pilasB.empty()) {
+            break;
+         }
+      }
+      std::cout << total << ' ';
+
+      for (auto j : usadasA) {
+         pilasA.push(j);
+      }
+      for (auto k : usadasB) {
+         pilasB.push(k);
+      }
+
+      usadasA.clear();
+      usadasB.clear();
+
+   }
+   std::cout << '\n';
 
    return true;
 }
@@ -46,7 +103,7 @@ int main() {
 #ifndef DOMJUDGE
    ifstream in("casos.txt");
    if (!in.is_open())
-      cout << "Error: no se ha podido abrir el archivo de entrada." << std::endl;
+      std::cout << "Error: no se ha podido abrir el archivo de entrada." << std::endl;
    auto cinbuf = cin.rdbuf(in.rdbuf());
 #endif
 
