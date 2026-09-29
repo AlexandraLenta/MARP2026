@@ -1,23 +1,11 @@
-6
-Spain 12
-Italy 10
-?
-France 18
-Spain -5
-?
-10
-Germany 8
-France 8
-?
-Spain 12
-?
-Spain 8
-Italy 22
-?
-Italy -7
-?
-4
-Spain 10
-France 10
-Zebra 10
-?
+3
+2 0 10
+2 5
+4 6
+0 2 100
+1 4 8
+5 7 8
+2 1 10
+8 20
+1 5
+6 7 10

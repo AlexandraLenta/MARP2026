@@ -7,6 +7,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <numeric>
 using namespace std;
 
 #include "PriorityQueue.h"  // propios o los de las estructuras de datos de clase
@@ -45,7 +46,7 @@ bool resuelveCaso() {
     
     int k;
     int id;
-    int minId = 100000000;
+    int minId = numeric_limits<int>::max();
 
     vector<vector<int>> pilas = vector<vector<int>>(n);
 
