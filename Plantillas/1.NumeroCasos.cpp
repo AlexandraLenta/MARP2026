@@ -1,15 +1,12 @@
 /*@ <authors>
  *
- * MARP86 Nombre Apellidos
+ * MARP39 Alexandra Lenta
  *
  *@ </authors> */
 
 #include <iostream>
 #include <fstream>
-#include <...>
 using namespace std;
-
-#include "..."  // propios o los de las estructuras de datos de clase
 
 /*@ <answer>
 
