@@ -24,12 +24,18 @@ using namespace std;
 
 
 void resuelveCaso() {
+   int p;
+   cin >> p;
+   
+   string peli, actor;
+   int nrActores;
 
-   // leer los datos de la entrada
+   for (int i = 0; i < p; p++) {
+      cin >> peli >> nrActores;
+      for (int j = 0; j < nrActores; j++) {
 
-   // resolver el caso posiblemente llamando a otras funciones
-
-   // escribir la solución
+      }
+   }
 }
 
 //@ </answer>
