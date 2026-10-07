@@ -6,6 +6,9 @@
 
 #include <iostream>
 #include <fstream>
+#include "Digrafo.h"
+#include <deque>
+#include <vector>
 using namespace std;
 
 /*@ <answer>
@@ -22,14 +25,74 @@ using namespace std;
 // ================================================================
 //@ <answer>
 
+class CicloDirigido {
+public:
+   CicloDirigido(Digrafo const& g) : visited(g.V(), false), ant(g.V()), queued(g.V(), false), isCycle(false) {
+      for (int i = 0; i < g.V(); i++) {
+         if (!visited[i])
+            dfs(g, i);
+      }
+   }
+
+   bool hasCycle() {
+      return isCycle;
+   }
+
+   deque<int>& getOrder() {
+      return order;
+   }
+
+   private:
+   vector<bool> visited;
+   vector<int> ant;
+   vector<bool> queued;
+   bool isCycle;
+   deque<int> order;
+
+   void dfs(Digrafo const& g, int v) {
+      queued[v] = true;
+      visited[v] = true;
+
+      for (int w : g.ady(v)) {
+         if (isCycle) 
+            return;
+         if (!visited[w]) {
+            ant[w] = v; dfs(g, w);
+         }
+         else if (queued[w]) {
+            isCycle = true;
+         }
+      }
+      order.push_front(v);
+      queued[v] = false;
+   }
+};
 
 void resuelveCaso() {
 
-   // leer los datos de la entrada
+   int N, M;
 
-   // resolver el caso posiblemente llamando a otras funciones
+   cin >> N >> M;
 
-   // escribir la solución
+   Digrafo d(N);
+
+   int a, b;
+   for (int i = 0; i < M; i++) {
+      cin >> a >> b;
+      d.ponArista(a - 1, b - 1);
+   }
+
+   CicloDirigido c(d);
+
+   if (c.hasCycle()) {
+      cout << "IMPOSIBLE\n";
+   }
+   else {
+      for (auto i : c.getOrder()) {
+         cout << i + 1 << ' ';
+      }
+      cout << '\n';
+   }
 }
 
 //@ </answer>

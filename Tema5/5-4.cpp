@@ -7,6 +7,10 @@
 #include <iostream>
 #include <fstream>
 using namespace std;
+#include "Digrafo.h"
+#include <vector>
+#include <deque>
+#include <unordered_map>
 
 /*@ <answer>
 
@@ -22,14 +26,81 @@ using namespace std;
 // ================================================================
 //@ <answer>
 
+class CicloDirigido {
+public:
+   CicloDirigido(Digrafo const& g) : visited(g.V(), false), ant(g.V()), queued(g.V(), false), isCycle(false) {
+      for (int i = 0; i < g.V(); i++) {
+         if (!visited[i])
+            dfs(g, i);
+      }
+   }
+
+   bool hasCycle() {
+      return isCycle;
+   }
+
+   deque<int>& getOrder() {
+      return order;
+   }
+
+   private:
+   vector<bool> visited;
+   vector<int> ant;
+   vector<bool> queued;
+   bool isCycle;
+   deque<int> order;
+
+   void dfs(Digrafo const& g, int v) {
+      queued[v] = true;
+      visited[v] = true;
+
+      for (int w : g.ady(v)) {
+         if (isCycle) 
+            return;
+         if (!visited[w]) {
+            ant[w] = v; dfs(g, w);
+         }
+         else if (queued[w]) {
+            isCycle = true;
+         }
+      }
+      order.push_front(v);
+      queued[v] = false;
+   }
+};
 
 void resuelveCaso() {
+   int N, M;
 
-   // leer los datos de la entrada
+   cin >> N >> M;
 
-   // resolver el caso posiblemente llamando a otras funciones
+   Digrafo d(N);
 
-   // escribir la solución
+   int a, b;
+   for (int i = 0; i < M; i++) {
+      cin >> a >> b;
+      d.ponArista(a - 1, b - 1);
+   }
+
+      CicloDirigido c(d);
+
+   if (c.hasCycle()) {
+      cout << "NO\n";
+   }
+   else {
+      cout << "SI ";
+      unordered_map<int, int> map;
+      
+      for (int i = 0; i < c.getOrder().size(); i++) {
+         map[c.getOrder()[i]] = i + 1;
+      }
+      
+      for (int i = 0; i < N; i++) {
+         cout << map[i] << ' ';
+      }
+      cout << '\n';
+   }
+
 }
 
 //@ </answer>
