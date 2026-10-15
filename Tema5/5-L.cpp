@@ -12,10 +12,6 @@ using namespace std;
 
 /*@ <answer>
 
- Escribe aquí un comentario general sobre la solución, explicando cómo
- se resuelve el problema y cuál es el coste de la solución, en función
- del tamaño del problema.
-
  @ </answer> */
 
 // ================================================================
@@ -26,16 +22,18 @@ using namespace std;
 class DFS
 {
 public:
-    DFS(vector<pair<char, int>> const &vec) : vec(vec), visited(vec.size(), false)
+    DFS(vector<pair<char, int>> const &vec) : vec(vec), visited(vec.size(), false), queued(vec.size(), false)
     {
-        dfs(vec, 0, vec.size() - 1);
+        dfs(vec, 1, vec.size());
     }
 
-    bool end() {
+    bool end()
+    {
         return reachedEnd;
     }
 
-    bool cycle() {
+    bool cycle()
+    {
         return isCycle;
     }
 
@@ -43,35 +41,33 @@ private:
     vector<pair<char, int>> const &vec;
     vector<bool> visited;
     bool isCycle = false;
-    vector<int> ant;
     vector<bool> queued;
-    bool reachedEnd;
+    bool reachedEnd = false;
 
     void dfs(vector<pair<char, int>> const &vec, int v, int destino)
     {
         visited[v] = true;
         queued[v] = true;
 
-        if (isCycle)
-            return;
-
-        if (vec[v].second == destino) {
+        if (vec[v].second == destino)
+        {
             reachedEnd = true;
             return;
         }
 
         if (vec[v].first == 'C')
         {
-            if (!visited[v++])
-                dfs(vec, v++, destino);
-                else if (queued[v++]) {
-                    isCycle = true;
-                }
+            if (!visited[v + 1])
+                dfs(vec, v + 1, destino);
+            else if (queued[v + 1])
+            {
+                isCycle = true;
+            }
         }
 
         if (!visited[vec[v].second])
             dfs(vec, vec[v].second, destino);
-        else if (queued[vec[v].second]) 
+        else if (queued[vec[v].second])
             isCycle = true;
 
         queued[v] = false;
@@ -108,12 +104,13 @@ void resuelveCaso()
 
     DFS res(vec);
 
-    if (res.cycle() && res.end()) {
+    if (res.cycle() && res.end())
+    {
         cout << "A VECES\n";
     }
-    else if (res.cycle() && !res.end()) 
+    else if (res.cycle() && !res.end())
         cout << "NUNCA\n";
-    else if (!res.cycle() && res.end()) 
+    else if (!res.cycle() && res.end())
         cout << "SIEMPRE\n";
 }
 
@@ -123,12 +120,12 @@ void resuelveCaso()
 int main()
 {
     // ajustes para que cin extraiga directamente de un fichero
-#ifndef DOMJUDGE
-    ifstream in("casos.txt");
-    if (!in.is_open())
-        cout << "Error: no se ha podido abrir el archivo de entrada." << std::endl;
-    auto cinbuf = cin.rdbuf(in.rdbuf());
-#endif
+    // #ifndef DOMJUDGE
+    //     ifstream in("casos.txt");
+    //     if (!in.is_open())
+    //         cout << "Error: no se ha podido abrir el archivo de entrada." << std::endl;
+    //     auto cinbuf = cin.rdbuf(in.rdbuf());
+    // #endif
 
     int numCasos;
     cin >> numCasos;
@@ -136,8 +133,8 @@ int main()
         resuelveCaso();
 
     // para dejar todo como estaba al principio
-#ifndef DOMJUDGE
-    cin.rdbuf(cinbuf);
-#endif
+    // #ifndef DOMJUDGE
+    //     cin.rdbuf(cinbuf);
+    // #endif
     return 0;
 }
