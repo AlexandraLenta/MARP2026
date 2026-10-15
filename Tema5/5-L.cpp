@@ -1,6 +1,7 @@
 /*@ <authors>
  *
  * MARP39 Alexandra Lenta
+ * MARP71 Zhiyi Zhou
  *
  *@ </authors> */
 
@@ -11,6 +12,47 @@
 using namespace std;
 
 /*@ <answer>
+Complejidad: O(V + E), donde V es el numero de instrucciones y E es el numero total de conexiones entre las instrucciones. 
+Para cada instruccion, puede haber 1 o 2 aristas.
+
+En este problema, se trata de un grafo dirigido, ya que de una instrucción solo 
+se puede pasar a la siguiente indicada, en una dirección.
+
+Podemos construir el grafo de manera implícita, como un vector de pares <char, int>,
+donde el char es el tipo de instruccion (A, J, o C), y el int es la siguiente instruccion 
+a ejecutar.
+
+Leemos las instrucciones y las metemos en el vector. Si la instruccion es una A, 
+la siguiente es la siguiente en el orden (i + 1). Si es J o C, la siguiente 
+instruccion será la indicada a continuación.
+
+Como las instrucciones en el input se enumeran desde 1 a L (siendo L el número total de instr.),
+hemos decidido meter una instruccón de relleno en la posición 0, para mantener esos números.
+También metemos una instrucción después de la última del input, que consideramos la 
+instrucción final, ya que en el enunciado se especifica que el programa tiene que terminar la 
+última instrucción indicada.
+
+El problema se puede resolver mediante un DFS, ya que estamos buscando un camino hasta el destino,
+que sería la instrucción final que hemos metido en el vector.
+
+Las tres posibles soluciones son "SIEMPRE", "A VECES", y "NUNCA". 
+"SIEMPRE" termina el programa cuando no hay ciclos y hemos llegado al final, es decir, cuando
+llegar al final no depende de una instrucción condicional.
+
+"A VECES" termina el programa cuando hay ciclos pero hemos conseguido llegar al final, lo que
+significa que depende de una instrucción conidiconal.
+
+"NUNCA" termina el programa cuando hay ciclos y no se puede llegar al final, lo que significa 
+que independientemente de alguna condición, el programa nunca termina de ejecutar.
+
+Sabiendo esto, en el dfs, queremos ver si hay ciclos y si hemos llegado al destino, por lo que
+utilizamos los vectores visited y queued. No queremos parar cuando encontramos un ciclo, ya que
+aún así podriamos conseguir llegar al final. Tampoco queremos parar la busqueda si llegamos al
+destino, porque podría haber un ciclo en un camino no explorado y eso significaría que el 
+programa se ejecuta "A VECES" en vez de "SIEMPRE".
+
+Empezamos en el nodo 1 del grafo.
+
 
  @ </answer> */
 
