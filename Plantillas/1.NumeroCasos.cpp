@@ -16,14 +16,13 @@ using namespace std;
 
  @ </answer> */
 
-
 // ================================================================
 // Escribe el código completo de tu solución aquí debajo
 // ================================================================
 //@ <answer>
 
-
-void resuelveCaso() {
+void resuelveCaso()
+{
 
    // leer los datos de la entrada
 
@@ -35,7 +34,8 @@ void resuelveCaso() {
 //@ </answer>
 //  Lo que se escriba debajo de esta línea ya no forma parte de la solución.
 
-int main() {
+int main()
+{
    // ajustes para que cin extraiga directamente de un fichero
 #ifndef DOMJUDGE
    ifstream in("casos.txt");
