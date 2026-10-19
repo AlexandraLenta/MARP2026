@@ -16,14 +16,13 @@ using namespace std;
 
  @ </answer> */
 
-
 // ================================================================
 // Escribe el código completo de tu solución aquí debajo
 // ================================================================
 //@ <answer>
 
-
-void resuelveCaso() {
+void resuelveCaso()
+{
 
    // leer los datos de la entrada
 
@@ -35,7 +34,8 @@ void resuelveCaso() {
 //@ </answer>
 //  Lo que se escriba debajo de esta línea ya no forma parte de la solución.
 
-int main() {
+int main()
+{
    // entrada/salida rápida
    ios::sync_with_stdio(false);
    cin.tie(nullptr);
@@ -43,7 +43,8 @@ int main() {
    // ajustes para que cin extraiga directamente de un fichero (solamente en local)
 #ifndef DOMJUDGE
    ifstream in("casos.txt");
-   if (!in.is_open()) {
+   if (!in.is_open())
+   {
       cout << "Error: no se ha podido abrir el archivo de entrada." << endl;
       // sin fichero no hay nada que leer, y cin >> ... dejaría las
       // variables sin tocar, con su valor basura
