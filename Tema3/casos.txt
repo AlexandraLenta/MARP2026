@@ -1,14 +1,29 @@
 3
-120 3 5
-9000 1000 15000
-15 2 1 13000 3 8000
-30 1 3 11000
-45 2 1 9000 2 3500
-60 1 1 14000
-100 3 1 13000 2 5000 3 10000
-10 4 2
-50 80 20 30
-4 1 2 10
-7 2 3 90 1 5
-5 2 0
-7 3
+4
+banzana 4
+alatano 3
+tomate 2
+naranja 12
+6
+C banzana 1
+C naranja 10
+C naranja 5
+Q
+P tomate 6
+Q
+3
+kiwi 5
+fresa 5
+uva 3
+5
+Q
+C kiwi 2
+Q
+C fresa 2
+Q
+1
+pera 2
+3
+Q
+C pera 3
+Q
