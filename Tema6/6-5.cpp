@@ -11,6 +11,7 @@
 #include <queue>
 #include <limits>
 using namespace std;
+#include "PriorityQueue.h"
 
 /*@ <answer>
 
@@ -25,59 +26,48 @@ using namespace std;
 // ================================================================
 //@ <answer>
 
-class Solucion
+class ARM
 {
 public:
-    Solucion(GrafoValorado<int> const& g, int origen, int destino) : g(g), visited(g.V(), false) { 
-        bfs(origen, destino);
+    ARM(GrafoValorado<int> const& g, int origen, int destino) : costeMax(0) { // O(A * log A)
+        endReached = false;
+        PriorityQueue<Arista<int>> pq(g.aristas()); // O(A)
+
+        ConjuntosDisjuntos cjtos(g.V()); // O(V)
+
+        while (!pq.empty()) { // O(A)
+            auto a = pq.top(); pq.pop(); // O(logA)
+            int v = a.uno();
+            int w = a.otro(v);
+            
+            if (!cjtos.unidos(v, w)) { // O(log*V )
+                cjtos.unir(v, w); // O((V - 1) * log*V)
+                _arm.push_back(a);
+                
+                costeMax = a.valor();
+
+                if (cjtos.unidos(origen, destino)) {
+                    endReached = true;
+                    break;
+                }
+            }
+        }
+    }
+
+    int maxCoste() const {
+        return costeMax;
     }
 
     bool end() {
         return endReached;
     }
 
-    int maxCoste() {
-        return costeMax;
-    }
-
 private:
-    GrafoValorado<int> const& g;
     std::vector<Arista<int>> _arm;
     int costeMax;
-    vector<bool> visited;
-    bool endReached = false;
-
-    void bfs(int origen, int destino) {
-        costeMax = 0;
-        queue<int> q;
-        ConjuntosDisjuntos cjtos(g.V());
-
-        visited[origen] = true;
-
-        q.push(origen);
-        int minim = numeric_limits<int>::max();
-
-        while (!q.empty()) {
-            int u = q.front();
-
-            q.pop();
-
-            for (auto a : g.ady(u)) {
-                if (a.otro(u) == destino) {
-                    minim = min(minim, a.valor());
-                    endReached = true;
-                }
-                else if (!cjtos.unidos(u, a.otro(u))) {
-                    q.push(a.otro(u));
-                    cjtos.unir(u, a.otro(u));
-
-                    minim = min(minim, a.valor());
-                }
-            }
-            costeMax = max(costeMax, minim);
-        }
-    }
+    bool endReached;
 };
+
 
 void resuelveCaso()
 {
@@ -96,10 +86,15 @@ void resuelveCaso()
 
     int n, m;
     cin >> n >> m;
+    
+    if (n == m) {
+        cout << "0\n";
+        return;
+    }
 
-    Solucion res(g, n - 1, m - 1);
+    ARM res(g, n - 1, m - 1);
 
-    if (res.end() == g.V() - 1) {
+    if (res.end()) {
         cout << res.maxCoste() << '\n';
     }
     else
