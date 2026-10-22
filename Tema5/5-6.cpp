@@ -6,25 +6,69 @@
 
 #include <iostream>
 #include <fstream>
+#include <queue>
+#include <vector>
+#include <unordered_map>
 using namespace std;
 
-/*@ <answer>
+const int MAX = 10000;
+const int INF = 1000000000;
 
- Escribe aquí un comentario general sobre la solución, explicando cómo
- se resuelve el problema y cuál es el coste de la solución, en función
- del tamaño del problema.
+int ady(int v, int a, int b, int M)
+{
+   return (a * v + b) % M;
+}
 
- @ </answer> */
+int bfs(vector<pair<int, int>> const &ops, int origen, int destino, int M)
+{
+   if (origen == destino)
+      return 0;
+   vector<int> dist(MAX, INF);
 
-// ================================================================
-// Escribe el código completo de tu solución aquí debajo
-// ================================================================
+   dist[origen] = 0;
+
+   queue<int> q;
+   q.push(origen);
+
+   while (!q.empty())
+   {
+      int v = q.front();
+      q.pop();
+
+      for (auto op : ops)
+      {
+         int w = ady(v, op.first, op.second, M);
+
+         if (dist[w] == INF)
+         {
+            dist[w] = dist[v] + 1;
+
+            if (w == destino)
+               return dist[w];
+            else
+               q.push(w);
+         }
+      }
+   }
+
+   return -1;
+}
+
 //@ <answer>
 
 void resuelveCaso()
 {
+   int M, S, T, N;
+   cin >> M >> S >> T >> N;
 
-   
+   int a, b;
+   vector<pair<int, int>> ops;
+   for (int i = 0; i < N; i++)
+   {
+      cin >> a >> b;
+      ops.push_back({a, b});
+   }
+   cout << bfs(ops, S, T, M) << '\n';
 }
 
 //@ </answer>
@@ -51,3 +95,12 @@ int main()
 
    int numCasos;
    cin >> numCasos;
+   for (int i = 0; i < numCasos; ++i)
+      resuelveCaso();
+
+   // para dejar todo como estaba al principio
+#ifndef DOMJUDGE
+   cin.rdbuf(cinbuf);
+#endif
+   return 0;
+}
