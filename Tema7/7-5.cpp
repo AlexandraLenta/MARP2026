@@ -10,6 +10,7 @@ using namespace std;
 #include "GrafoValorado.h"
 #include <limits>
 #include <queue>
+#include <tuple>
 
 /*@ <answer>
 
@@ -24,50 +25,66 @@ using namespace std;
 // ================================================================
 //@ <answer>
 
-class AllPaths
-{
-public:
-   AllPaths(GrafoValorado<int> const &g, int origen, int destino) : visited(g.V(), false), result(), q()
-   {
-      visited[origen] = true;
-      q.push_back({{origen}, 0});
+const int INF = numeric_limits<int>::max();
 
-      while (!q.empty())
-      {
-         vector<int> path = q.front().first;
-         int cost = q.front().second;
+// edgeCount[i] -> minimum number of edges from origen to node i
+vector<int> BFS(GrafoValorado<int> const& g, int origen) {
+   vector<int> edgeCount(g.V(), INF);
 
-         q.pop_front();
-         int lastN = path[path.size() - 1];
+   queue<int> q;
 
-         if (lastN == destino)
-         {
-            result.push_back({path, cost});
-            continue;
-         }
+   edgeCount[origen] = 0;
 
-         for (auto a : g.ady(lastN))
-         {
-            if (!visited[a.otro(lastN)])
-            {
-               visited[a.otro(lastN)] = true;
-               
-               vector<int> newPath = path;
-               
-               newPath.push_back(a.otro(lastN));
-               q.push_back({newPath, cost + a.valor()});
-            }
+   q.push(origen);
+
+   while (!q.empty()) {
+      int n = q.front(); q.pop();
+
+      for (auto a : g.ady(n)) {
+         int w = a.otro(n);
+
+         if (edgeCount[w] >= INF) {
+            edgeCount[w] = edgeCount[n] + 1;
+            q.push(w);
          }
       }
    }
 
-private:
-   const int INF = std::numeric_limits<int>::max();
-   int origen;
-   std::vector<bool> visited;
-   std::vector<pair<vector<int>, int>> result;
-   deque<pair<vector<int>, int>> q;
-};
+   return edgeCount;
+}
+
+void Dijkstra(GrafoValorado<int> const& g, int origen, vector<int>& dist, vector<int>& edges) {
+   dist = vector<int>(g.V(), INF);
+   edges = vector<int>(g.V(), INF);
+
+   priority_queue<tuple<int, int, int>, vector<tuple<int, int, int>>, greater<tuple<int, int, int>>> pq; // distance (cost), edges (streets), node
+
+   dist[origen] = 0;
+   edges[origen] = 0;
+
+   pq.push({0, 0, origen});
+
+   while (!pq.empty()) {
+      auto [d, e, n] = pq.top(); pq.pop();
+
+      if (d > dist[n] || (d == dist[n] && e > edges[n])) {
+         continue;
+      }
+
+      for (auto a : g.ady(n)) {
+         int w = a.otro(n);
+
+         int nd = d + a.valor();
+         int ne = e + 1;
+
+         if (nd < dist[w] || (nd == dist[w] && ne < edges[w])) {
+            dist[w] = nd;
+            edges[w] = ne;
+            pq.push({nd, ne, w});
+         }
+      }
+   }
+}
 
 void resuelveCaso()
 {
@@ -89,8 +106,20 @@ void resuelveCaso()
    for (int i = 0; i < K; i++)
    {
       cin >> a >> b;
-      AllPaths d(g, a - 1, b - 1);
+      a--; b--;
+
+      vector<int> res = BFS(g, a);
+      if (res[b] >= INF) {
+         cout << "SIN CAMINO\n";
+         continue;
+      }
+      
+      vector<int> dist, streets;
+      Dijkstra(g, a, dist, streets);
+
+      cout << dist[b] << ' ' << (streets[b] == res[b] ? "SI" : "NO") << '\n';
    }
+   cout << "---\n";
 }
 
 //@ </answer>
