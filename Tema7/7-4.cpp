@@ -28,7 +28,7 @@ class Dijkstra
 {
 public:
     Dijkstra(DigrafoValorado<int> const &g, int origen, int limit) :
-                                                       dist(g.V(), INF), ulti(g.V()), pq(g.V())
+                                                       dist(g.V(), INF), pq(g.V())
     {
         dist[origen] = 0;
         pq.push(origen, 0);
@@ -54,7 +54,6 @@ private:
     const int INF = std::numeric_limits<int>::max();
     int origen;
     std::vector<int> dist;
-    std::vector<AristaDirigida<int>> ulti;
     IndexPQ<int> pq;
     int count = 0;
 
@@ -64,7 +63,6 @@ private:
         if (dist[w] > dist[v] + a.valor())
         {
             dist[w] = dist[v] + a.valor();
-            ulti[w] = a;
             pq.update(w, dist[w]);
         }
     }
