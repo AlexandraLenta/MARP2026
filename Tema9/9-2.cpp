@@ -6,6 +6,8 @@
 
 #include <iostream>
 #include <fstream>
+#include <vector>
+#include <algorithm>
 using namespace std;
 
 /*@ <answer>
@@ -23,12 +25,46 @@ using namespace std;
 
 void resuelveCaso()
 {
+    int C, F, N;
+    cin >> C >> F >> N;
 
-   // leer los datos de la entrada
+    int c, f;
+    vector<pair<int, int>> intervals(N);
+    for (int i = 0; i < N; i++) {
+        cin >> c >> f;
+        
+        intervals[i] = {c, f};
+    }
 
-   // resolver el caso posiblemente llamando a otras funciones
+    sort(intervals.begin(), intervals.end());
 
-   // escribir la solución
+    int currPoint = C;
+
+    int i = 0;
+    int intervalNr = 0;
+    
+    while (currPoint < F) {
+        int bestTask = -1;
+        int bestEnd = currPoint;
+
+        while (i < N && intervals[i].first <= currPoint) {
+            if (intervals[i].second > bestEnd) {
+                bestEnd = intervals[i].second;
+                bestTask = i;
+            }
+            i++;
+        }
+
+        if (bestTask <= -1) {
+            cout << "Imposible\n";
+            return;
+        }
+
+        currPoint = bestEnd;
+        intervalNr++;
+    }
+
+    cout << intervalNr << '\n';
 }
 
 //@ </answer>
