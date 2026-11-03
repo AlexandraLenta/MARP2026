@@ -7,6 +7,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <algorithm>
 using namespace std;
 
 /*@ <answer>
@@ -22,27 +23,35 @@ using namespace std;
 // ================================================================
 //@ <answer>
 
-struct MovieEntry {
-    int day;
-    pair<int, int> startHour, endHour;
-    int duration;
-};
-
 void resuelveCaso()
 {
     int N;
     cin >> N;
 
-    int d, h, m, dur;
-    vector<MovieEntry> movies(N);
+    int d, h, m, dur; char c;
+    vector<pair<long long, long long>> movies(N);
 
     for (int i = 0; i < N; i++) {
-        cin >> d >> h >> m >> dur;
-        MovieEntry mE;
-        mE.day = d;
-        mE.duration = dur;
+        cin >> d >> h >> c >> m >> dur;
         
+        int startHour = (long long)(d - 1) * 1440 + h * 60 + m;
+        int endHour = startHour + dur + 10;
+        movies[i] = { endHour, startHour };
     }
+
+    sort(movies.begin(), movies.end());
+
+    int moviesWatched = 0;
+    long long latestEnd = -1;
+
+    for (int i = 0; i < N; i++) {
+        if (movies[i].second >= latestEnd) {
+            moviesWatched++;
+            latestEnd = movies[i].first;
+        }
+    }
+
+    cout << moviesWatched << '\n';
 }
 
 //@ </answer>
