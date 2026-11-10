@@ -25,46 +25,51 @@ using namespace std;
 
 void resuelveCaso()
 {
-    int C, F, N;
-    cin >> C >> F >> N;
+   int C, F, N;
+   cin >> C >> F >> N;
 
-    int c, f;
-    vector<pair<int, int>> intervals(N);
-    for (int i = 0; i < N; i++) {
-        cin >> c >> f;
-        
-        intervals[i] = {c, f};
-    }
+   int c, f;
+   vector<pair<int, int>> intervals(N);
+   for (int i = 0; i < N; i++)
+   {
+      cin >> c >> f;
 
-    sort(intervals.begin(), intervals.end());
+      intervals[i] = {c, f};
+   }
 
-    int currPoint = C;
+   sort(intervals.begin(), intervals.end());
 
-    int i = 0;
-    int intervalNr = 0;
-    
-    while (currPoint < F) {
-        int bestTask = -1;
-        int bestEnd = currPoint;
+   int currPoint = C;
 
-        while (i < N && intervals[i].first <= currPoint) {
-            if (intervals[i].second > bestEnd) {
-                bestEnd = intervals[i].second;
-                bestTask = i;
-            }
-            i++;
-        }
+   int i = 0;
+   int intervalNr = 0;
 
-        if (bestTask <= -1) {
-            cout << "Imposible\n";
-            return;
-        }
+   while (currPoint < F)
+   {
+      int bestTask = -1;
+      int bestEnd = currPoint;
 
-        currPoint = bestEnd;
-        intervalNr++;
-    }
+      while (i < N && intervals[i].first <= currPoint)
+      {
+         if (intervals[i].second > bestEnd)
+         {
+            bestEnd = intervals[i].second;
+            bestTask = i;
+         }
+         i++;
+      }
 
-    cout << intervalNr << '\n';
+      if (bestTask <= -1)
+      {
+         cout << "Imposible\n";
+         return;
+      }
+
+      currPoint = bestEnd;
+      intervalNr++;
+   }
+
+   cout << intervalNr << '\n';
 }
 
 //@ </answer>
