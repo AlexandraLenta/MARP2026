@@ -6,6 +6,8 @@
 
 #include <iostream>
 #include <fstream>
+#include <vector>
+#include <algorithm>
 using namespace std;
 
 /*@ <answer>
@@ -23,7 +25,34 @@ using namespace std;
 
 void resuelveCaso()
 {
-    
+    int P, N;
+    cin >> P >> N;
+
+    vector<int> pesos(N);
+
+    int v;
+    for (int i = 0; i < N; i++) {
+        cin >> v;
+        pesos[i] = v;
+    }
+
+    sort(pesos.begin(), pesos.end(), greater<int>());
+
+    int count = N;
+
+    int j = N - 1;
+    for (int i = 0; i < N; i++) {
+        if (j <= i) {
+            break;
+        }
+
+        if (pesos[i] + pesos[j] <= P) {
+            count--; // podemos emparejarlos
+            j--;
+        }
+    }
+
+    cout << count << '\n';
 }
 
 //@ </answer>
