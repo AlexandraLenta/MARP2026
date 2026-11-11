@@ -50,6 +50,10 @@ public:
       if (num == _intInf) out << "+Inf";
       else out << num;
    }
+
+   int number() {
+      return num;
+   }
 };
 
 const EntInf Infinito(EntInf::_intInf);

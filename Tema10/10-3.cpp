@@ -7,28 +7,77 @@
 #include <iostream>
 #include <fstream>
 using namespace std;
+#include <vector>
+#include <algorithm>
+#include "EnterosInf.h"
 
-/*@ <answer>
+void resolver(int C, vector<pair<int, int>> const &valor, long long& formasNr, int& costeMin, int& numMin)
+{
+   int n = valor.size();
 
- Escribe aquí un comentario general sobre la solución, explicando cómo
- se resuelve el problema y cuál es el coste de la solución, en función
- del tamaño del problema.
+   vector<long long> formas(C + 1, 0);
+   // vector<vector<int>> formas(n + 1, vector<int>(C + 1, 0));
+   vector<EntInf> minimo(C + 1, Infinito);
+   vector<EntInf> costeMinimo(C + 1, Infinito);
 
- @ </answer> */
+   formas[0] = 1; // una forma de sumar 0
+   // formas[0][0] = 1;
+   minimo[0] = 0; // minimas cuerdas para sumar longitud 0
+   costeMinimo[0] = 0;
 
-// ================================================================
-// Escribe el código completo de tu solución aquí debajo
-// ================================================================
+   for (int i = 1; i <= n; i++)
+   {
+      for (int j = C; j >= valor[i - 1].first; j--) {
+         minimo[j] = min(minimo[j], minimo[j - valor[i - 1].first] + 1);
+         formas[j] = (formas[j - valor[i - 1].first] + formas[j]);
+         
+         costeMinimo[j] = min(costeMinimo[j], costeMinimo[j - valor[i - 1].first] + valor[i - 1].second);
+      }
+   }
+
+   // for (int i = 1; i <= n; i++) {
+   //    formas[i][0] = 1;
+   //    for (int j = 1; j <= C; j++) {
+   //       if (j < valor[i - 1].first) {
+   //          formas[i][j] = formas[i - 1][j];
+   //       }
+   //       else {
+   //          formas[i][j] = formas[i - 1][j] + formas[i - 1][j - valor[i - 1].first];
+   //       }
+   //    }
+   // }
+
+   formasNr = formas[C];
+   costeMin = costeMinimo[C].number();
+   numMin = minimo[C].number();
+}
+
 //@ <answer>
 
 void resuelveCaso()
 {
+   int N, L;
+   cin >> N >> L;
 
-   // leer los datos de la entrada
+   int a, b;
+   vector<pair<int, int>> cordelesCoste(N);
 
-   // resolver el caso posiblemente llamando a otras funciones
+   for (int i = 0; i < N; i++)
+   {
+      cin >> a >> b;
+      cordelesCoste[i] = {a, b};
+   }
 
-   // escribir la solución
+   long long formas; int costeMin, numMin;
+   
+   resolver(L, cordelesCoste, formas, costeMin, numMin);
+
+   if (formas == 0) {
+      cout << "NO\n";
+      return;
+   }
+
+   cout << "SI " << formas << ' ' << numMin << ' ' << costeMin << '\n';
 }
 
 //@ </answer>
