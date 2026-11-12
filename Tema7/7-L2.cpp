@@ -15,9 +15,28 @@ using namespace std;
 
 /*@ <answer>
 
- Escribe aquí un comentario general sobre la solución, explicando cómo
- se resuelve el problema y cuál es el coste de la solución, en función
- del tamaño del problema.
+Se pide el camino más corto desde un nodo (trabajo) a otro (casa), pasando necesariamente por un nodo
+que contenga una farmacia. El tiempo de espera en esos nodos también cuenta hacia la distancia.
+Solo se debe parar en 1 farmacia, en la que tenga menos tiempo de espera, aunque haya más farmacias 
+en el camino.
+
+Para resolver este problema, se puede utilizar el algoritmo de Dijkstra, dos veces, una con el origen
+en el nodo "trabajo" y otra vez con el grafo inverso y origen en el nodo "casa".
+
+Así conseguimos el camino más corto desde ambos extremos hasta cada nodo. Luego miramos solo los nodos que 
+tengan una farmacia, y sumamos la distancia desde el trabajo hasta ese nodo con la distancia desde la casa
+hasta ese nodo, y finalmente con el tiempo de espera de ese nodo. Así, solo se cuenta una vez el tiempo de
+espera, y solo se cuenta el tiempo de espera mínimo de entre todos los posibles.
+
+El coste de tiempo del algoritmo es O(N + A * log(N)), donde N es el número de nodos y A el número de conexiones
+entre los nodos. El algoritmo de Dijkstra se ejecuta dos veces, con complejidad O(A * log (N)), ya que inicializar 
+los vectores es O(N) y se hace 1 vez por vector, construir la cola es O(N), y se hace una vez, y luego la operación
+pop con coste O(log N) se hace N veces, y update con coste O(log N) se hace A veces. Por tanto, el coste sería
+O(2*N + NlogN + AlogN), lo que se simplifica a O(A*log(N)). 
+El bucle que recorre las farmacias para calcular la distancia mínima tiene como mucho coste O(N), si todos los
+nodos son farmacias. 
+
+Tras recorrer todos los nodos con farmacias así, nos quedamos con el valor del camino que menos tiempo lleva.
 
  @ </answer> */
 
