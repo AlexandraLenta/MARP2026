@@ -28,20 +28,45 @@ int max3(int a, int b, int c) {
     return ret;
 }
 
-int resolver(vector<vector<int>> const& casillas) {
+pair<int, int> resolver(vector<vector<int>> const& casillas) {
     int n = casillas.size();
 
-    vector<vector<int>> maximo(n + 1, vector<int>(n + 2, 0));
-    int maximoGen = 0;
+    // vector<vector<int>> maximo(n + 1, vector<int>(n + 2, 0));
 
-    for (int i = n - 1; i >= 0; i--) {
-        for (int j = n + 1; j >= 0; j--) {
-            maximo[i][j] = max3(maximo[i+1][j], maximo[i+1][j - 1], maximo[i+1][j + 1]) + casillas[i][j];
-            maximoGen = max(maximoGen, maximo[i][j]);
+    // for (int i = 1; i <= n; i++) {
+    //     for (int j = 1; j <= n; j++) {
+    //         maximo[i][j] = max3(maximo[i-1][j-1], maximo[i-1][j], maximo[i-1][j+1]) + casillas[i-1][j-1];
+    //     }
+    // }
+
+    // int maximoGen = 0, colInicial = 0;
+    // for (int j = 1; j <= n; j++) {
+    //     if (maximo[n][j] > maximoGen) {
+    //         maximoGen = maximo[n][j];
+    //         colInicial = j;
+    //     }
+    // }
+
+    vector<int> maximo(n + 2, 0);
+
+    for (int i = 0; i < n; i++) {
+        int antIzq = 0;
+        for (int j = 1; j <= n; j++) {
+            int antAct = maximo[j];
+            maximo[j] = max3(antIzq, antAct, maximo[j + 1]) + casillas[i][j - 1];
+            antIzq = antAct;
         }
     }
 
-    return maximoGen;
+    int maximoGen = 0, colInicial = 0;
+    for (int j = 1; j <= n; j++) {
+        if (maximo[j] > maximoGen) {
+            maximoGen = maximo[j];
+            colInicial = j;
+        }
+    }
+
+    return {maximoGen, colInicial};
 }
 
 void resuelveCaso()
@@ -56,8 +81,8 @@ void resuelveCaso()
             casillas[i][j] = a;
         }
     }
-
-    cout << resolver(casillas) << '\n';
+    auto res = resolver(casillas);
+    cout << res.first << ' ' << res.second << '\n';
 }
 
 //@ </answer>
