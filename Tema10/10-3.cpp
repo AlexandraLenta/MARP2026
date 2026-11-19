@@ -16,12 +16,10 @@ void resolver(int C, vector<pair<int, int>> const &valor, long long& formasNr, i
    int n = valor.size();
 
    vector<long long> formas(C + 1, 0);
-   // vector<vector<int>> formas(n + 1, vector<int>(C + 1, 0));
    vector<EntInf> minimo(C + 1, Infinito);
    vector<EntInf> costeMinimo(C + 1, Infinito);
 
    formas[0] = 1; // una forma de sumar 0
-   // formas[0][0] = 1;
    minimo[0] = 0; // minimas cuerdas para sumar longitud 0
    costeMinimo[0] = 0;
 
