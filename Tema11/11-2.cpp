@@ -7,6 +7,7 @@
 #include <iostream>
 #include <fstream>
 using namespace std;
+#include "Matriz.h"
 
 /*@ <answer>
 
@@ -21,14 +22,69 @@ using namespace std;
 // ================================================================
 //@ <answer>
 
+// calcula la longitud del mayor palíndromo en patitos[i..j]
+int resolver_rec(string const &palabra, int i, int j, Matriz<int> &palin)
+{
+   int &res = palin[i][j];
+   if (res == -1)
+   {
+      if (i > j)
+         res = 0;
+      else if (i == j)
+         res = 1;
+      else if (palabra[i] == palabra[j])
+         res = resolver_rec(palabra, i + 1, j - 1, palin) + 2;
+      else
+         res = max(resolver_rec(palabra, i + 1, j, palin),
+                   resolver_rec(palabra, i, j - 1, palin));
+   }
+   return res;
+}
+
+void reconstruir(string const &palabra, Matriz<int> const &palin,
+                 int i, int j, string &sol)
+{
+   if (i > j)
+      return;
+   if (i == j)
+      sol.push_back(palabra[i]);
+   else if (palabra[i] == palabra[j])
+   {
+      sol.push_back(palabra[i]);
+      reconstruir(palabra, palin, i + 1, j - 1, sol);
+      sol.push_back(palabra[j]);
+   }
+   else
+   {
+      if (palin[i][j] == palin[i + 1][j])
+      {
+         sol.push_back(palabra[i]);
+         reconstruir(palabra, palin, i + 1, j, sol);
+         sol.push_back(palabra[i]);
+      }
+      else {
+         sol.push_back(palabra[j]);
+         reconstruir(palabra, palin, i, j - 1, sol);
+         sol.push_back(palabra[j]);
+      }
+   }
+}
+
 void resuelveCaso()
 {
+   string word;
+   cin >> word;
 
-   // leer los datos de la entrada
+   int n = word.length();
 
-   // resolver el caso posiblemente llamando a otras funciones
+   Matriz<int> palindromo(n, n, -1);
+   int res = resolver_rec(word, 0, n - 1, palindromo);
 
-   // escribir la solución
+   string sol;
+
+   reconstruir(word, palindromo, 0, n - 1, sol);
+
+   cout << (sol.size() - res) / 2 << ' ' << sol << '\n';
 }
 
 //@ </answer>
