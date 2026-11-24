@@ -13,6 +13,11 @@ using namespace std;
 
 res[i][j] = maximo profit teniendo en cuenta las actuaciones entre los dias i y j
 
+in j -> ultima zi care am aleso, ceea ce inseamna ca facem max intre daca alegem azi and then ultima zi posibila aleasa...?
+
+de exemplu in ultimul exemplu daca alegem 8, e mai mare decat pana atunci, which means we choose 8... but...
+
+astazi maxim este max intre maxim peste o zi in urma + de azi, si maxim de ieri...
  @ </answer> */
 
 // ================================================================
@@ -20,21 +25,17 @@ res[i][j] = maximo profit teniendo en cuenta las actuaciones entre los dias i y 
 // ================================================================
 //@ <answer>
 
-int resolver_rec(vector<int> const& v, int i, vector<int>& res) {
-    if (i > v.size()) {
-        return 0;
-    }
-    int& r = res[i];
+int resolver_rec(vector<int> const& v) {
+    int n = v.size();
 
-    if (r == -1) {
-        if (i == v.size()) {
-            r = v[i]; // solo actuamos este dia
-        }
-        else {
-            r = max(resolver_rec(v, i + 2, res) + v[i], resolver_rec(v, i + 1, res));
-        }
+    vector<int> res(n + 1, 0);
+    res[1] = v[0];
+
+    for (int i = 2; i <= n; i++) {
+        res[i] = max(res[i - 1], res[i - 2] + v[i - 1]);
     }
-    return r;
+
+    return res[n];
 }
 
 void resuelveCaso()
@@ -48,8 +49,7 @@ void resuelveCaso()
         nrs[i] = a;
     }
 
-    vector<int> res(N, -1);
-    cout << resolver_rec(nrs, 0, res) << '\n'; 
+    cout << resolver_rec(nrs) << '\n'; 
 }
 
 //@ </answer>
