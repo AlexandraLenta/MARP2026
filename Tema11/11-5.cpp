@@ -6,6 +6,10 @@
 
 #include <iostream>
 #include <fstream>
+#include <vector>
+#include "Matriz.h"
+#include "EnterosInf.h"
+#include <unordered_map>
 using namespace std;
 
 /*@ <answer>
@@ -21,14 +25,89 @@ using namespace std;
 // ================================================================
 //@ <answer>
 
+void Floyd(Matriz<EntInf> const &G, Matriz<EntInf> &C)
+{
+   int V = G.numfils(); // número de vértices de G
+
+   // inicialización
+
+   C = G;
+
+   // actualizaciones de las matrices
+   for (int k = 0; k < V; ++k)
+   {
+      for (int i = 0; i < V; ++i)
+      {
+         for (int j = 0; j < V; ++j)
+         {
+            auto temp = C[i][k] + C[k][j];
+
+            if (temp < C[i][j])
+            { // es mejor pasar por k
+               C[i][j] = temp;
+            }
+         }
+      }
+   }
+}
+
 void resuelveCaso()
 {
+   int P, R;
+   cin >> P >> R;
 
-   // leer los datos de la entrada
+   string name1, name2;
 
-   // resolver el caso posiblemente llamando a otras funciones
+   unordered_map<string, int> nameIDS;
+   Matriz<EntInf> G(P, P, Infinito);
 
-   // escribir la solución
+   for (int i = 0; i < P; i++)
+   {
+      G[i][i] = 0;
+   }
+
+   int j = 0;
+
+   for (int i = 0; i < R; i++)
+   {
+      cin >> name1 >> name2;
+
+      // el nombre no aun
+      if (nameIDS.find(name1) == nameIDS.end())
+      {
+         nameIDS[name1] = j;
+         j++;
+      }
+
+      if (nameIDS.find(name2) == nameIDS.end())
+      {
+         nameIDS[name2] = j;
+         j++;
+      }
+
+      G[nameIDS[name1]][nameIDS[name2]] = 1;
+      G[nameIDS[name2]][nameIDS[name1]] = 1;
+   }
+
+   Matriz<EntInf> C;
+   EntInf grado = 0;
+
+   Floyd(G, C);
+
+   for (int i = 0; i < C.numfils(); i++)
+   {
+      for (int j = 0; j < C.numcols(); j++)
+      {
+         grado = max(grado, C[i][j]);
+         if (grado == Infinito)
+         {
+            cout << "DESCONECTADA\n";
+            return;
+         }
+      }
+   }
+
+   cout << grado << '\n';
 }
 
 //@ </answer>

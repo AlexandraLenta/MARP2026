@@ -1,7 +1,14 @@
 3
-4
-8 7 1 4
-4
-2 4 15 5
-7
-6 11 3 15 9 4 12
+4 4
+Marta Mario
+Mario Roberto
+Roberto Raquel
+Mario Raquel
+4 2
+Roberto Mario
+Marta Raquel
+5 4
+Lucia Pablo
+Pablo Elena
+Elena Lucia
+Lucia Jorge
