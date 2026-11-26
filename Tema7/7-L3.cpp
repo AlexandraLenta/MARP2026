@@ -6,7 +6,10 @@
 
 #include <iostream>
 #include <fstream>
+#include "DigrafoValorado.h"
+#include "IndexPQ.h"
 using namespace std;
+#include <limits>
 
 /*@ <answer>
 
@@ -21,9 +24,71 @@ using namespace std;
 // ================================================================
 //@ <answer>
 
+class Dijkstra
+{
+public:
+    Dijkstra(DigrafoValorado<int> const &g, int orig) : origen(orig),
+                                                       dist(g.V(), INF), pq(g.V()) 
+    {
+        dist[origen] = 0;
+        pq.push(origen, 0);
+
+        while (!pq.empty())
+        {
+            int v = pq.top().elem;
+            pq.pop();
+            for (auto a : g.ady(v))
+                relajar(a);
+        }
+    }
+
+    bool hayCamino(int v) const { return dist[v] != INF; }
+
+    int distancia(int v) const { return dist[v]; }
+private:
+    const int INF = std::numeric_limits<int>::max();
+    int origen;
+    std::vector<int> dist;
+    IndexPQ<int> pq;
+
+    void relajar(AristaDirigida<int> a)
+    {
+        int v = a.desde(), w = a.hasta();
+        if (dist[w] > dist[v] + a.valor())
+        {
+            dist[w] = dist[v] + a.valor();
+            pq.update(w, dist[w]);
+        }
+    }
+};
+
 void resuelveCaso()
 {
     int N, M;
+    cin >> N >> M;
+    
+    int origen, destino;
+    cin >> origen >> destino;
+
+    int a, b, c;
+    DigrafoValorado<int> d(2*N);
+    for (int i = 0; i < M; i++) {
+        cin >> a >> b >> c;
+        d.ponArista({a - 1, b - 1, c});
+        d.ponArista({a - 1 + N, b - 1 + N, c});
+        d.ponArista({a - 1, b - 1 + N, 0});
+    }
+
+    Dijkstra dj(d, origen - 1);
+
+    if (dj.hayCamino(destino - 1 + N)) {
+        cout << dj.distancia(destino - 1 + N);
+    }
+    else {
+        cout << "IMPOSIBLE";
+    }
+    cout << '\n';
+
 }
 
 //@ </answer>
