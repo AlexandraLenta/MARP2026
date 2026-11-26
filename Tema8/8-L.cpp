@@ -62,7 +62,7 @@ void resuelveCaso()
     // priority queue de <tiempo final, numero sala>, para ordenar segun la conferencia que termina antes
     priority_queue<pair<int, int>, vector<pair<int, int>>, std::greater<pair<int, int>>> salas; 
     vector<int> salaPorConf(N); // el nr de la sala para cada conferencia
-    int currSala = 0;
+    int totalSalas = 0;
 
     for (int i : ordenIndex) {
         int sala;
@@ -72,15 +72,15 @@ void resuelveCaso()
             salas.pop();
         }
         else {
-            currSala++;
-            sala = currSala;
+            totalSalas++;
+            sala = totalSalas;
         }
 
         salaPorConf[i] = sala;
         salas.push({horasConferencias[i].second, sala});
     }
     
-    cout << currSala << '\n';
+    cout << totalSalas << '\n';
 
     for (int i = 0; i < N; i++) {
         cout << salaPorConf[i] << ' ';
